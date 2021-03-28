@@ -1,0 +1,50 @@
+version: v2
+arch: "x86_64"
+helper:
+  name: "helper"
+  ipaddr: "192.168.7.5"
+  networkifacename: "enp1s0"
+dns:
+  domain: "keights.org"
+  clusterid: "ocp4"
+  forwarder1: "8.8.8.8"
+  forwarder2: "8.8.4.4"
+dhcp:
+  router: "192.168.7.1"
+  bcast: "192.168.7.255"
+  netmask: "255.255.255.0"
+  poolstart: "192.168.7.200"
+  poolend: "192.168.7.250"
+  ipid: "192.168.7.0"
+  netmaskid: "255.255.255.0"
+bootstrap:
+  name: "bootstrap"
+  ipaddr: "192.168.7.20"
+  macaddr: "52:54:00:28:c5:f9"
+  disk: vda
+masters:
+  - name: "master0"
+    ipaddr: "192.168.7.21"
+    macaddr: "52:54:00:17:6d:8b"
+    disk: vda
+  - name: "master1"
+    ipaddr: "192.168.7.22"
+    macaddr: "52:54:00:48:1f:32"
+    disk: vda
+  - name: "master2"
+    ipaddr: "192.168.7.23"
+    macaddr: "52:54:00:f5:87:a0"
+    disk: vda
+workers:
+  - name: "worker0"
+    ipaddr: "192.168.7.24"
+    macaddr: "52:54:00:80:bb:dd"
+    disk: vda
+  - name: "worker1"
+    ipaddr: "192.168.7.25"
+    macaddr: "52:54:00:22:7c:4a"
+    disk: vda
+  - name: "worker2"
+    ipaddr: "192.168.7.26"
+    macaddr: "52:54:00:36:7b:3b"
+    disk: vda

@@ -4,6 +4,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"net"
+    "time"
 )
 
 // preflight error counter
@@ -68,30 +69,42 @@ func portCheck() int {
 			logrus.Debugf("Testing port %s on protocol %s", port, protocol)
 			//check if you can listen on this port on TCP
 			if protocol == "tcp" {
-				if t, err := net.Listen(protocol, ":"+port); err == nil {
-					// If this returns an error, then something else is listening on this port
-					if err != nil {
-						if logrus.GetLevel().String() == "debug" {
-							logrus.Warnf("Port check  %s/%s is in use", port, protocol)
-						}
-						porterrorcount += 1
-					}
-					t.Close()
+                address := "127.0.0.1" + ":" + port
+                conn, err := net.DialTimeout(protocol, address, 1*time.Second)
+			    logrus.Debugf("Error %s", err)
+                if err != nil {
+				    porterrorcount += 1
+				    logrus.Warnf("Port check  %s/%s is in use", port, protocol)
+                }
+                //defer conn.Close()
+                conn.Close()
 
-				}
+				//if t, err := net.Listen(protocol, ":"+port); err == nil {
+					// If this returns an error, then something else is listening on this port
+					//if err != nil {
+						//if logrus.GetLevel().String() == "debug" {
+						//	logrus.Warnf("Port check  %s/%s is in use", port, protocol)
+						//}
+						//porterrorcount += 1
+					//}
+					//t.Close()
+
+				//}
 			} else if protocol == "udp" {
-				if u, err := net.ListenPacket(protocol, ":"+port); err == nil {
+			    u, err := net.ListenPacket(protocol, ":"+port)
+				//if u, err := net.ListenPacket(protocol, ":"+port); err == nil {
 					// If this returns an error, then something else is listening on this port
-					if err != nil {
-						if logrus.GetLevel().String() == "debug" {
-							logrus.Warnf("Port check  %s/%s is in use", port, protocol)
-						}
-						porterrorcount += 1
-					}
-					u.Close()
+			    if err != nil {
+				   // if logrus.GetLevel().String() == "debug" why waste time on logic when we should log on ALL errors 
+				    //logrus.Warnf("Port check  %s/%s is in use", port, protocol)
+					porterrorcount += 1
+				    logrus.Warnf("Port check  %s/%s is in use", port, protocol)
+				}
+					//}
+			    u.Close()
 
 				}
-			}
+			//}
 		}
 	}
 
